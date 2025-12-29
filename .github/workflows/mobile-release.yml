@@ -73,7 +73,7 @@ jobs:
         with:
           name: "SirBuild ${{ needs.get-commit-hash.outputs.commit_hash }}"
           tag_name: "sirbuild-${{ needs.get-commit-hash.outputs.commit_hash }}"
-          prerelease: true
+          prerelease: false
           files: |
             /home/runner/*.apk
             /home/runner/*.zip
