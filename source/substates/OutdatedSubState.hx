@@ -37,7 +37,7 @@ class OutdatedSubState extends MusicBeatSubstate
 			-----------------------------------------------\n
 			Thank you for using the Engine!',
 			32);
-		warnText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		warnText.setFormat(Paths.font("phantom.ttf"), 32, FlxColor.WHITE, CENTER);
 		warnText.scrollFactor.set();
 		warnText.screenCenter(Y);
 		warnText.alpha = 0.0;
