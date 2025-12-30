@@ -13,7 +13,7 @@ jobs:
   get-commit-hash:
     runs-on: ubuntu-latest
     outputs:
-      commit_hash: ${{ steps.get_commit_hash.outputs.commit_hash }}
+      commit_hash: ${{ steps.get_commit_hash.outputs.COMMIT_HASH }}
     steps:
       - name: Check Repository
         run: |
@@ -31,7 +31,7 @@ jobs:
         run: |
           commit_hash=${GITHUB_SHA::7}
           echo "Latest commit hash is $commit_hash"
-          echo "commit_hash=$commit_hash" >> $GITHUB_OUTPUT
+          echo "COMMIT_HASH=commit_hash" >> $GITHUB_OUTPUT
 
   build:
     name: ${{ matrix.name }}
@@ -57,26 +57,23 @@ jobs:
   Releaser:
     needs: [get-commit-hash, build]
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      discussions: write
+    permissions: write-all
     steps:
       - name: Download Android Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@main
         with:
-          name: androidBuild
+           name: androidBuild
+           path: /home/runner
 
-      - name: Rename Android File
-        run: mv PsychEngine-release.apk PsychEngine-Android.apk || mv *.apk PsychEngine-Android.apk
+      - name: Move Android File
+        run: mv /home/runner/${{ env.PROJECT_NAME }}-release.apk /home/runner/${{ env.PROJECT_NAME }}-Android.apk
 
       - name: Publish The Release
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: "SirBuild ${{ needs.get-commit-hash.outputs.commit_hash }}"
           tag_name: "1.0.4"
           prerelease: false
-          generate_release_notes: false
           files: |
-            PsychEngine-Android.apk
+            /home/runner/*.apk
+            /home/runner/*.zip
