@@ -1206,8 +1206,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			touchPad.forEachAlive(function(button:TouchButton) {
 				if (button.visible && !isOverButton)
 				{
-					if (button.width != null && button.height != null &&
-						mouseX >= button.x && mouseX <= button.x + button.width &&
+					if (mouseX >= button.x && mouseX <= button.x + button.width &&
 						mouseY >= button.y && mouseY <= button.y + button.height)
 						isOverButton = true;
 				}
