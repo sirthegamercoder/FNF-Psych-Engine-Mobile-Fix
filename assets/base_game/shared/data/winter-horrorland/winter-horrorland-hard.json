@@ -2762,7 +2762,6 @@
 		"events": [],
 		"player3": null,
 		"song": "Winter Horrorland",
-		"needsVoices": true,
 		"stage": "mallEvil",
 		"format": "psych_v1_convert",
 		"speed": 1.3,

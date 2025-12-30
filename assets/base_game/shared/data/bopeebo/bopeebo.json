@@ -843,7 +843,6 @@
 		],
 		"player2": "dad",
 		"song": "Bopeebo",
-		"needsVoices": true,
 		"validScore": true,
 		"format": "psych_v1_convert",
 		"bpm": 100,

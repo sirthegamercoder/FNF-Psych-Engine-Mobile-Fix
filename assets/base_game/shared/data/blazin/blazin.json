@@ -964,7 +964,6 @@
 		"gfVersion": "nene",
 		"format": "psych_v1_convert",
 		"bpm": 180,
-		"needsVoices": false,
 		"song": "Blazin'",
 		"offset": 0
 	}

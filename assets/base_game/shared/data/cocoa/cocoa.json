@@ -1861,7 +1861,6 @@
 		"events": [],
 		"player3": null,
 		"song": "Cocoa",
-		"needsVoices": true,
 		"stage": "mall",
 		"format": "psych_v1_convert",
 		"speed": 1.3,

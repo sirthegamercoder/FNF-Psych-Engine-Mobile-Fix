@@ -82,46 +82,46 @@
 		},
 		{
 			"offsets": [8, 1],
-			"indices": [],
+			"loop": false,
 			"fps": 24,
 			"anim": "lightCan",
-			"loop": false,
+			"indices": [],
 			"name": "Light Can0"
 		},
 		{
 			"offsets": [15, 9],
-			"indices": [],
+			"loop": false,
 			"fps": 24,
 			"anim": "kickCan",
-			"loop": false,
+			"indices": [],
 			"name": "Kick Up0"
 		},
 		{
 			"offsets": [7, -1],
-			"indices": [],
+			"loop": false,
 			"fps": 24,
 			"anim": "kneeCan",
-			"loop": false,
+			"indices": [],
 			"name": "Knee Forward0"
 		},
 		{
 			"offsets": [0, 0],
-			"indices": [],
+			"loop": false,
 			"fps": 24,
 			"anim": "pissed",
-			"loop": false,
+			"indices": [],
 			"name": "Gets Pissed0"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": false,
 	"image": "characters/darnell",
-	"position": [0, 200],
+	"position": [-10, 290],
 	"healthicon": "darnell",
 	"flip_x": false,
 	"healthbar_colors": [115, 94, 176],
-	"camera_position": [-150, 100],
+	"camera_position": [-150, -10],
 	"sing_duration": 6.1,
-	"scale": 1,
+	"scale": 1.333,
 	"_editor_isPlayer": false
 }

@@ -1862,7 +1862,6 @@
 		],
 		"song": "Spookeez",
 		"validScore": true,
-		"needsVoices": true,
 		"format": "psych_v1_convert",
 		"speed": 1,
 		"bpm": 150

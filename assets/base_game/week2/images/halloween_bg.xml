@@ -1,28 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="halloween_bg.png">
-	<!-- Created with Adobe Animate version 20.0.0.17400 -->
-	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="halloweem bg0000" x="0" y="0" width="2114" height="1075"/>
-	<SubTexture name="halloweem bg lightning strike0000" x="2124" y="0" width="2114" height="1075" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0001" x="4248" y="0" width="2114" height="1000" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0002" x="0" y="1085" width="2114" height="1090"/>
-	<SubTexture name="halloweem bg lightning strike0003" x="2124" y="1085" width="2114" height="1081" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0004" x="4248" y="1085" width="2114" height="1081" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0005" x="4248" y="1085" width="2114" height="1081" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0006" x="0" y="2185" width="2114" height="1081" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0007" x="2124" y="2185" width="2114" height="1081" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0008" x="4248" y="2185" width="2114" height="1080" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0009" x="0" y="3276" width="2114" height="1080" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0010" x="2124" y="3276" width="2114" height="1080" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0011" x="4248" y="3276" width="2114" height="1080" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0012" x="0" y="4366" width="2114" height="1080" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0013" x="2124" y="4366" width="2114" height="1080" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0014" x="4248" y="4366" width="2114" height="1080" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0015" x="0" y="5456" width="2114" height="1079" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0016" x="2124" y="5456" width="2114" height="1079" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0017" x="4248" y="5456" width="2114" height="1079" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0018" x="0" y="6545" width="2114" height="1079" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0019" x="2124" y="6545" width="2114" height="1078" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0020" x="4248" y="6545" width="2114" height="1078" frameX="0" frameY="0" frameWidth="2114" frameHeight="1090"/>
-	<SubTexture name="halloweem bg lightning strike0029" x="0" y="0" width="2114" height="1075"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="halloween_bg.png" width="3207" height="3726">
+  <SubTexture name="halloweem bg lightning strike0000.png" x="0" y="0"  width="1056" height="536" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0001.png" x="0" y="536"  width="1056" height="498" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0002.png" x="0" y="1034"  width="1056" height="541" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0003.png" x="1056" y="0" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0004.png" x="1056" y="1056" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0006.png" x="0" y="1575"  width="1056" height="538" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0007.png" x="1594" y="0" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0008.png" x="1594" y="1056" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0009.png" x="0" y="2113"  width="1056" height="538" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0010.png" x="1056" y="2112"  width="1056" height="538" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0011.png" x="2132" y="0" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0012.png" x="2132" y="1056" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0013.png" x="0" y="2651"  width="1056" height="538" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0014.png" x="1056" y="2650"  width="1056" height="538" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0015.png" x="2112" y="2112" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0016.png" x="2670" y="0" width="537" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0017.png" x="2670" y="1056" width="537" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0018.png" x="2650" y="2112" width="537" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0019.png" x="0" y="3189"  width="1056" height="537" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0020.png" x="1056" y="3188"  width="1056" height="537" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg lightning strike0029.png" x="2112" y="3168"  width="1056" height="536" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="538"/>
+  <SubTexture name="halloweem bg lightning strike0005.png" x="1056" y="1056" width="538" height="1056" rotated="true"  frameX="-0" frameY="-0" frameWidth="1057" frameHeight="545"/>
+  <SubTexture name="halloweem bg0000.png" x="2112" y="3168"  width="1056" height="536" frameX="-0" frameY="-0" frameWidth="1057" frameHeight="538"/>
 </TextureAtlas>

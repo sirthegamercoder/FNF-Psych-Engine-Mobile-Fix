@@ -2672,7 +2672,6 @@
 		],
 		"player2": "pico",
 		"song": "Philly Nice",
-		"needsVoices": true,
 		"bpm": 175,
 		"speed": 2,
 		"format": "psych_v1_convert"

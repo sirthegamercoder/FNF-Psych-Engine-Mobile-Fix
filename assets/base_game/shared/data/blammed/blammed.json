@@ -1778,7 +1778,6 @@
 		],
 		"player2": "pico",
 		"song": "Blammed",
-		"needsVoices": true,
 		"bpm": 165,
 		"speed": 1.5,
 		"format": "psych_v1_convert"

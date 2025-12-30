@@ -5,6 +5,7 @@ import openfl.Lib;
 import haxe.Timer;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.utils.Assets;
 import openfl.system.System as OpenFlSystem;
 import lime.system.System as LimeSystem;
 
@@ -57,7 +58,7 @@ class FPSCounter extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 14, color);
+		defaultTextFormat = new TextFormat(Assets.getFont("assets/fonts/fps.ttf").fontName, 14, color);
 		width = FlxG.width;
 		multiline = true;
 		text = "FPS: ";

@@ -2110,7 +2110,6 @@
 		],
 		"player2": "spooky",
 		"song": "South",
-		"needsVoices": true,
 		"bpm": 165,
 		"speed": 2.2,
 		"format": "psych_v1_convert"

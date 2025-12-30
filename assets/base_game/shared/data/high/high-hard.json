@@ -2787,7 +2787,6 @@
 		"events": [],
 		"player3": null,
 		"song": "High",
-		"needsVoices": true,
 		"stage": "limo",
 		"format": "psych_v1_convert",
 		"speed": 2,

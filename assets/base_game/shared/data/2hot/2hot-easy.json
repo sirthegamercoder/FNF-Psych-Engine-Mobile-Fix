@@ -1359,7 +1359,6 @@
 		"gfVersion": "nene",
 		"format": "psych_v1_convert",
 		"bpm": 182,
-		"needsVoices": true,
 		"song": "2Hot",
 		"offset": 0
 	}
