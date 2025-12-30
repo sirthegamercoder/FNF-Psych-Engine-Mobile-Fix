@@ -46,12 +46,10 @@ class FPSCounter extends TextField
 		super();
 
 		#if !officialBuild
-		#if sys
 		if (LimeSystem.platformName == LimeSystem.platformVersion || LimeSystem.platformVersion == null)
-			os = '\nOS: ${LimeSystem.platformName}' #if cpp + ' ${getArch() != "Unknown" ? getArch() : ""}' #end;
+			os = '\nOS: ${LimeSystem.platformName}' #if cpp + ' ${getArch() != 'Unknown' ? getArch() : ''}' #end;
 		else
-			os = '\nOS: ${LimeSystem.platformName}' #if cpp + ' ${getArch() != "Unknown" ? getArch() : ""}' #end + ' - ${LimeSystem.platformVersion}';
-		#end
+			os = '\nOS: ${LimeSystem.platformName}' #if cpp + ' ${getArch() != 'Unknown' ? getArch() : ''}' #end + ' - ${LimeSystem.platformVersion}';
 		#end
 
 		positionFPS(x, y);
@@ -59,7 +57,7 @@ class FPSCounter extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("fps", 14, color);
+		defaultTextFormat = new TextFormat("_sans", 14, color);
 		width = FlxG.width;
 		multiline = true;
 		text = "FPS: ";
@@ -68,7 +66,6 @@ class FPSCounter extends TextField
 		lastFramerateUpdateTime = Timer.stamp();
 		prevTime = Lib.getTimer();
 		updateTime = prevTime + 500;
-		framesCount = 0;
 	}
 
 
@@ -89,11 +86,11 @@ class FPSCounter extends TextField
 	{
 		if (ClientPrefs.data.fpsRework)
 		{
-			// Flixel keeps resetting this to 60 on focus gained
+			// Flixel keeps reseting this to 60 on focus gained
 			if (FlxG.stage.window.frameRate != ClientPrefs.data.framerate && FlxG.stage.window.frameRate != FlxG.game.focusLostFramerate)
 				FlxG.stage.window.frameRate = ClientPrefs.data.framerate;
 
-			var currentTime = Lib.getTimer();
+			var currentTime = openfl.Lib.getTimer();
 			framesCount++;
 
 			if (currentTime >= updateTime)
@@ -107,16 +104,16 @@ class FPSCounter extends TextField
 
 			// Set Update and Draw framerate to the current FPS every 1.5 second to prevent "slowness" issue
 			if ((FlxG.updateFramerate >= currentFPS + 5 || FlxG.updateFramerate <= currentFPS - 5)
-				&& Timer.stamp() - lastFramerateUpdateTime >= 1.5
+				&& haxe.Timer.stamp() - lastFramerateUpdateTime >= 1.5
 				&& currentFPS >= 30)
 			{
 				FlxG.updateFramerate = FlxG.drawFramerate = currentFPS;
-				lastFramerateUpdateTime = Timer.stamp();
+				lastFramerateUpdateTime = haxe.Timer.stamp();
 			}
 		}
 		else
 		{
-			final now:Float = Timer.stamp() * 1000;
+			final now:Float = haxe.Timer.stamp() * 1000;
 			times.push(now);
 			while (times[0] < now - 1000)
 				times.shift();
@@ -135,7 +132,7 @@ class FPSCounter extends TextField
 	}
 
 	inline function get_memoryMegas():Float
-		return #if cpp cpp.vm.Gc.memInfo64(cpp.vm.Gc.MEM_INFO_USAGE) #else 0 #end;
+		return cpp.vm.Gc.memInfo64(cpp.vm.Gc.MEM_INFO_USAGE);
 
 	public inline function positionFPS(X:Float, Y:Float, ?scale:Float = 1){
 		scaleX = scaleY = #if android (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
