@@ -1206,7 +1206,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			touchPad.forEachAlive(function(button:TouchButton) {
 				if (button.visible && !isOverButton)
 				{
-					if (mouseX >= button.x && mouseX <= button.x + button.width &&
+					if (button.width != null && button.height != null &&
+						mouseX >= button.x && mouseX <= button.x + button.width &&
 						mouseY >= button.y && mouseY <= button.y + button.height)
 						isOverButton = true;
 				}
@@ -1408,7 +1409,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		switch (e.type)
 		{
 			case MouseEvent.MOUSE_DOWN:
-				if (!isMouseOverUI())
+				if (isMouseOverUI != null && !isMouseOverUI())
 				{
 					var mouse = new Point(e.stageX, e.stageY);
 					cameraPosition.x = FlxG.camera.scroll.x + mouse.x;
@@ -1424,5 +1425,5 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			case MouseEvent.MOUSE_UP:
 				isDragging = false;
 		}
-    }
+	}
 }
