@@ -28,41 +28,53 @@ env:
 
 jobs:
   build:
-    name: Build
+    name: ${{ inputs.name }} Build
     runs-on: ${{ inputs.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Setup Java (for Android)
+        if: inputs.name == 'Android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Setup Android NDK
         if: inputs.name == 'Android'
         id: setup-ndk
-        uses: nttld/setup-ndk@main
+        uses: nttld/setup-ndk@v2
         with:
-          ndk-version: r27c
-          add-to-path: false
+          ndk-version: 'r27c'
+
+      - name: Setup Android SDK
+        if: inputs.name == 'Android'
+        uses: android-actions/setup-android@v3
 
       - name: Install Libraries
         run: ${{ inputs.setupCommand }}
 
       - name: Configure Android
         if: inputs.name == 'Android'
+        env:
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
+          haxelib run lime setup android
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
           haxelib run lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
-          haxelib run lime config JAVA_HOME $JAVA_HOME_17_arm64
-          haxelib run lime config ANDROID_SETUP true
+          haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
 
       - name: Compile
         run: haxelib run lime build ${{ inputs.buildArgs }}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifactName }}
           path: ${{ inputs.artifactPath }}
