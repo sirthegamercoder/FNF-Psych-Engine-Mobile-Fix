@@ -8,7 +8,6 @@ import flixel.util.FlxDestroyUtil;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import openfl.utils.Assets;
 
@@ -168,13 +167,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 		addTouchPad('LEFT_FULL', 'CHARACTER_EDITOR');
 		addTouchPadCamera();
-
-		if (controls.mobileC)
-		{
-			FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
-			FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseEvent);
-			FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
-		}
 
 		if(ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
 
