@@ -1,8 +1,6 @@
 package debug;
 
 import flixel.FlxG;
-import openfl.Lib;
-import haxe.Timer;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.utils.Assets;
@@ -35,12 +33,8 @@ class FPSCounter extends TextField
 	public var memoryMegas(get, never):Float;
 
 	@:noCompletion private var times:Array<Float>;
-	@:noCompletion private var lastFramerateUpdateTime:Float;
-	@:noCompletion private var updateTime:Int;
-	@:noCompletion private var framesCount:Int;
-	@:noCompletion private var prevTime:Int;
 
-	public var os:String = '';
+	private var os:String = "";
 
 	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000)
 	{
@@ -64,11 +58,27 @@ class FPSCounter extends TextField
 		text = "FPS: ";
 
 		times = [];
-		lastFramerateUpdateTime = Timer.stamp();
-		prevTime = Lib.getTimer();
-		updateTime = prevTime + 500;
 	}
 
+	var deltaTimeout:Float = 0.0;
+
+	// Event Handlers
+	private override function __enterFrame(deltaTime:Float):Void
+	{
+		// prevents the overlay from updating every frame, why would you need to anyways
+		if (deltaTimeout > 1000) {
+			deltaTimeout = 0.0;
+			return;
+		}
+
+		final now:Float = haxe.Timer.stamp() * 1000;
+		times.push(now);
+		while (times[0] < now - 1000) times.shift();
+
+		currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;		
+		updateText();
+		deltaTimeout += deltaTime;
+	}
 
 	public dynamic function updateText():Void // so people can override it in hscript
 	{
@@ -78,62 +88,12 @@ class FPSCounter extends TextField
 		os;
 
 		textColor = 0xFFFFFFFF;
-		if (currentFPS < FlxG.stage.window.frameRate * 0.5)
+		if (currentFPS < FlxG.drawFramerate * 0.5)
 			textColor = 0xFFFF0000;
 	}
 
-	var deltaTimeout:Float = 0.0;
-	private override function __enterFrame(deltaTime:Float):Void
-	{
-		if (ClientPrefs.data.fpsRework)
-		{
-			// Flixel keeps reseting this to 60 on focus gained
-			if (FlxG.stage.window.frameRate != ClientPrefs.data.framerate && FlxG.stage.window.frameRate != FlxG.game.focusLostFramerate)
-				FlxG.stage.window.frameRate = ClientPrefs.data.framerate;
-
-			var currentTime = openfl.Lib.getTimer();
-			framesCount++;
-
-			if (currentTime >= updateTime)
-			{
-				var elapsed = currentTime - prevTime;
-				currentFPS = Math.ceil((framesCount * 1000) / elapsed);
-				framesCount = 0;
-				prevTime = currentTime;
-				updateTime = currentTime + 500;
-			}
-
-			// Set Update and Draw framerate to the current FPS every 1.5 second to prevent "slowness" issue
-			if ((FlxG.updateFramerate >= currentFPS + 5 || FlxG.updateFramerate <= currentFPS - 5)
-				&& haxe.Timer.stamp() - lastFramerateUpdateTime >= 1.5
-				&& currentFPS >= 30)
-			{
-				FlxG.updateFramerate = FlxG.drawFramerate = currentFPS;
-				lastFramerateUpdateTime = haxe.Timer.stamp();
-			}
-		}
-		else
-		{
-			final now:Float = haxe.Timer.stamp() * 1000;
-			times.push(now);
-			while (times[0] < now - 1000)
-				times.shift();
-			// prevents the overlay from updating every frame, why would you need to anyways @crowplexus
-			if (deltaTimeout < 50)
-			{
-				deltaTimeout += deltaTime;
-				return;
-			}
-
-			currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
-			deltaTimeout = 0.0;
-		}
-
-		updateText();
-	}
-
 	inline function get_memoryMegas():Float
-		return cpp.vm.Gc.memInfo64(cpp.vm.Gc.MEM_INFO_USAGE);
+		return cast(OpenFlSystem.totalMemory, UInt);
 
 	public inline function positionFPS(X:Float, Y:Float, ?scale:Float = 1){
 		scaleX = scaleY = #if android (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
