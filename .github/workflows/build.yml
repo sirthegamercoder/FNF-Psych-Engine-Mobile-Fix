@@ -1,4 +1,4 @@
-name: Build Workflow
+name: Build
 
 on:
   workflow_call:
@@ -6,152 +6,64 @@ on:
       name:
         required: true
         type: string
-        description: 'Build target name'
       os:
         required: true
         type: string
-        description: 'Runner OS'
       setupCommand:
         required: true
         type: string
-        description: 'Setup command to run'
       buildArgs:
         required: true
         type: string
-        description: 'Build arguments for lime'
       artifactName:
         required: true
         type: string
-        description: 'Artifact name for upload'
       artifactPath:
         required: true
         type: string
-        description: 'Path to artifact file'
 
 env:
   HAXE_VERSION: 4.3.6
   PROJECT_NAME: PsychEngine
-  BUILD_CACHE_KEY: ${{ github.sha }}
 
 jobs:
   build:
-    name: Build for ${{ inputs.name }}
+    name: Build
     runs-on: ${{ inputs.os }}
-    
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Cache Haxe Dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.haxe
-            ~/.haxelib
-            project/.haxelib
-          key: haxe-${{ env.BUILD_CACHE_KEY }}
-          restore-keys: |
-            haxe-
+      - name: Checkout
+        uses: actions/checkout@main
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@v2
+        uses: krdlab/setup-haxe@master
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
-      - name: Setup Android Environment
-        if: inputs.name == 'Android'
-        uses: android-actions/setup-android@v3
-
       - name: Setup Android NDK
         if: inputs.name == 'Android'
-        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        uses: nttld/setup-ndk@main
         with:
           ndk-version: r27c
-          add-to-path: true
+          add-to-path: false
 
-      - name: Verify Build Tools
-        run: |
-          echo "=== Build Environment ==="
-          haxe --version
-          lime --version
-          if [[ "${{ inputs.name }}" == "Android" ]]; then
-            echo "Android SDK: $ANDROID_SDK_ROOT"
-            echo "NDK: $ANDROID_NDK_ROOT"
-            echo "Java: $JAVA_HOME"
-          fi
+      - name: Install Libraries
+        run: ${{ inputs.setupCommand }}
 
-      - name: Install Dependencies
-        run: |
-          echo "Running setup command: ${{ inputs.setupCommand }}"
-          ${{ inputs.setupCommand }}
-
-          haxelib list
-
-      - name: Configure Android Build
+      - name: Configure Android
         if: inputs.name == 'Android'
         run: |
-          lime setup android
+          haxelib run lime config ANDROID_SDK $ANDROID_HOME
+          haxelib run lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
+          haxelib run lime config JAVA_HOME $JAVA_HOME_17_arm64
+          haxelib run lime config ANDROID_SETUP true
 
-          lime config ANDROID_SDK $ANDROID_SDK_ROOT
-          lime config ANDROID_NDK_ROOT $ANDROID_NDK_ROOT
-          lime config JAVA_HOME $JAVA_HOME
-          lime config ANDROID_SETUP true
-          
-          echo "Android configuration complete"
+      - name: Compile
+        run: haxelib run lime build ${{ inputs.buildArgs }}
 
-      - name: Build Project
-        timeout-minutes: 30
-        run: |
-          echo "Building with arguments: ${{ inputs.buildArgs }}"
-
-          MAX_RETRIES=3
-          RETRY_COUNT=0
-          
-          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-            if haxelib run lime build ${{ inputs.buildArgs }}; then
-              echo "Build successful!"
-              break
-            else
-              RETRY_COUNT=$((RETRY_COUNT+1))
-              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                echo "Build failed, retrying ($RETRY_COUNT/$MAX_RETRIES)..."
-                sleep 10
-              else
-                echo "Build failed after $MAX_RETRIES attempts"
-                exit 1
-              fi
-            fi
-          done
-
-      - name: Verify Build Output
-        run: |
-          echo "Checking build output..."
-          ls -la ${{ inputs.artifactPath }} || true
-
-          FILE_COUNT=$(find ${{ inputs.artifactPath }} -type f 2>/dev/null | wc -l)
-          echo "Found $FILE_COUNT file(s) at ${{ inputs.artifactPath }}"
-          
-          if [ $FILE_COUNT -eq 0 ]; then
-            echo "Error: No build artifacts found!"
-            exit 1
-          fi
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Artifact
+        uses: actions/upload-artifact@main
         with:
           name: ${{ inputs.artifactName }}
           path: ${{ inputs.artifactPath }}
           if-no-files-found: error
-          retention-days: 7
-          compression-level: 9
-
-      - name: Build Summary
-        if: always()
-        run: |
-          echo "=== Build Summary ==="
-          echo "Target: ${{ inputs.name }}"
-          echo "OS: ${{ inputs.os }}"
-          echo "Status: ${{ job.status }}"
-          echo "Artifact: ${{ inputs.artifactName }}"
