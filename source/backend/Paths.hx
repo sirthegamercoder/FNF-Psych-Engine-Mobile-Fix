@@ -515,7 +515,7 @@ class Paths
 			}
 			#end
 		}
-		return (#if android StorageUtil.getExternalStorageDirectory() + #else Sys.getCwd() + #end 'mods/' + key);
+		return (#if android StorageUtil.getExternalDirectory() + #else Sys.getCwd() + #end 'mods/' + key);
 	}
 
 	#if linux
