@@ -1176,47 +1176,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		updatePresence();
 	}
 
-	function isMouseOverUI():Bool
-	{
-		var mouseX = FlxG.mouse.screenX;
-		var mouseY = FlxG.mouse.screenY;
-
-		if (UI_box != null && UI_box.visible)
-		{
-			if (mouseX >= UI_box.x && mouseX <= UI_box.x + UI_box.width &&
-				mouseY >= UI_box.y && mouseY <= UI_box.y + UI_box.height)
-				return true;
-			
-			if (UI_characterbox != null && UI_characterbox.visible)
-			{
-				if (mouseX >= UI_characterbox.x && mouseX <= UI_characterbox.x + UI_characterbox.width &&
-					mouseY >= UI_characterbox.y && mouseY <= UI_characterbox.y + UI_characterbox.height)
-					return true;
-			}
-		}
-
-		if (helpBg != null && helpBg.visible)
-		{
-			return true;
-		}
-
-		if (controls.mobileC && touchPad != null)
-		{
-			var isOverButton = false;
-			touchPad.forEachAlive(function(button:TouchButton) {
-				if (button.visible && !isOverButton)
-				{
-					if (mouseX >= button.x && mouseX <= button.x + button.width &&
-						mouseY >= button.y && mouseY <= button.y + button.height)
-						isOverButton = true;
-				}
-			});
-			return isOverButton;
-		}
-
-		return false;
-	}
-
 	inline function updatePresence() {
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
@@ -1400,29 +1359,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, '$_char.json');
 			#end
-		}
-	}
-
-	function onMouseEvent(e:MouseEvent):Void
-	{
-		switch (e.type)
-		{
-			case MouseEvent.MOUSE_DOWN:
-				if (isMouseOverUI != null && !isMouseOverUI())
-				{
-					var mouse = new Point(e.stageX, e.stageY);
-					cameraPosition.x = FlxG.camera.scroll.x + mouse.x;
-					cameraPosition.y = FlxG.camera.scroll.y + mouse.y;
-					isDragging = true;
-				}
-
-			case MouseEvent.MOUSE_MOVE if (isDragging):
-				var mouse = new Point(e.stageX, e.stageY);
-				FlxG.camera.scroll.x = cameraPosition.x - mouse.x;
-				FlxG.camera.scroll.y = cameraPosition.y - mouse.y;
-
-			case MouseEvent.MOUSE_UP:
-				isDragging = false;
 		}
 	}
 }
