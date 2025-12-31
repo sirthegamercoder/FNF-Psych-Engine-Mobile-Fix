@@ -1,5 +1,11 @@
 name: Release
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      release_description:
+        description: 'Release notes (supports Markdown)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -73,6 +79,7 @@ jobs:
         with:
           name: "SirBuild ${{ needs.get-commit-hash.outputs.commit_hash }}"
           tag_name: "1.0.4-${{ needs.get-commit-hash.outputs.commit_hash }}"
+          body: "${{ github.event.inputs.release_description }}"
           prerelease: false
           files: |
             /home/runner/*.apk
