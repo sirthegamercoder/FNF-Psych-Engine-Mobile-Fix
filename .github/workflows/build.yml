@@ -26,7 +26,7 @@ on:
       artifactPath:
         required: true
         type: string
-        description: 'Path to artifact files'
+        description: 'Path to artifact file'
 
 env:
   HAXE_VERSION: 4.3.6
