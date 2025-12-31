@@ -1752,7 +1752,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			fullPath = fullPath.replace('\\', '/');
 			var exePath = Sys.getCwd().replace('\\', '/');
 			#if android
-			var externalPath = StorageUtil.getExternalDirectory();
+			var externalPath = StorageUtil.getExternalStorageDirectory();
 			#end
 			if(fullPath.startsWith(exePath))
 			{
