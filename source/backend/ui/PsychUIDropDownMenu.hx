@@ -41,10 +41,29 @@ class PsychUIDropDownMenu extends PsychUIInputText
 				showDropDown(true, 0, _curFilter);
 			}
 		}
+
+		var originalUnfocus = unfocus;
 		unfocus = function()
 		{
-			showDropDownClickFix();
-			showDropDown(false);
+			var mouseOverDropdown = false;
+			if(PsychUIInputText.focusOn == this)
+			{
+				for(item in _items)
+				{
+					if(item.visible && FlxG.mouse.overlaps(item.bg, camera))
+					{
+						mouseOverDropdown = true;
+						break;
+					}
+				}
+			}
+
+			if(!mouseOverDropdown)
+			{
+				showDropDownClickFix();
+				showDropDown(false);
+				if(originalUnfocus != null) originalUnfocus();
+			}
 		}
 
 		for (option in list)
@@ -109,20 +128,19 @@ class PsychUIDropDownMenu extends PsychUIInputText
 			if(mouseOverButton || mouseOverDropdown)
 			{
 				button.animation.play('pressed', true);
-
-				if(mouseOverButton || mouseOverDropdown)
-				{
-					PsychUIInputText.focusOn = this;
-				}
+				PsychUIInputText.focusOn = this;
 
 				if(mouseOverButton && lastFocus == this)
 				{
 					PsychUIInputText.focusOn = null;
 				}
 			}
-			else if(PsychUIInputText.focusOn == this && !FlxG.mouse.overlaps(this, camera))
+			else if(PsychUIInputText.focusOn == this && !FlxG.mouse.overlaps(this, camera) && FlxG.mouse.wheel == 0)
 			{
-				PsychUIInputText.focusOn = null;
+				if(FlxG.mouse.justPressed)
+				{
+					PsychUIInputText.focusOn = null;
+				}
 			}
 		}
 		else if(FlxG.mouse.released && button.animation.curAnim != null && button.animation.curAnim.name != 'normal') 
