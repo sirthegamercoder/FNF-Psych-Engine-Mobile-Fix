@@ -145,6 +145,39 @@ class Character extends FlxSprite
 	{
 		isAnimateAtlas = false;
 
+		var isVSlice:Bool = (json.assetPath != null) || (json.animations != null && json.animations.length > 0 && json.animations[0].prefix != null);
+		if (isVSlice)
+		{
+			trace('V-Slice character JSON detected and converted');
+
+			if (json.assetPath != null) json.image = json.assetPath;
+			if (json.flipX != null) json.flip_x = json.flipX;
+			if (json.cameraOffsets != null) json.camera_position = json.cameraOffsets;
+			if (json.singTime != null) json.sing_duration = json.singTime;
+			if (json.isPixel != null) json.no_antialiasing = json.isPixel;
+			if (json.healthIcon != null && json.healthIcon.id != null) json.healthicon = json.healthIcon.id;
+			if (json.offsets != null) json.position = json.offsets;
+
+			if (json.animations != null)
+			{
+				var anims:Array<Dynamic> = (json.animations : Array<Dynamic>);
+				var newAnims:Array<Dynamic> = new Array<Dynamic>();
+				for (a in anims)
+				{
+					var na:Dynamic = {
+						anim: (a.prefix != null) ? a.prefix : (a.anim != null ? a.anim : ''),
+						name: (a.name != null) ? a.name : '',
+						fps: (a.frameRate != null) ? a.frameRate : (a.fps != null ? a.fps : 24),
+						loop: (a.looped != null) ? a.looped : (a.loop != null ? a.loop : false),
+						indices: (a.frameIndices != null) ? a.frameIndices : (a.indices != null ? a.indices : []),
+						offsets: (a.offsets != null) ? a.offsets : [0, 0]
+					};
+					newAnims.push(na);
+				}
+				json.animations = newAnims;
+			}
+		}
+
 		#if flxanimate
 		var animToFind:String = Paths.getPath('images/' + json.image + '/Animation.json', TEXT);
 		if (#if MODS_ALLOWED FileSystem.exists(animToFind) || #end Assets.exists(animToFind))
