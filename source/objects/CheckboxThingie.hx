@@ -7,6 +7,7 @@ class CheckboxThingie extends FlxSprite
 	public var copyAlpha:Bool = true;
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
+	
 	public function new(x:Float = 0, y:Float = 0, ?checked = false) {
 		super(x, y);
 
@@ -20,7 +21,14 @@ class CheckboxThingie extends FlxSprite
 		setGraphicSize(Std.int(0.9 * width));
 		updateHitbox();
 
-		animationFinished(checked ? 'checking' : 'unchecking');
+		if (checked) {
+			animation.play("checked", true);
+			offset.set(3, 12);
+		} else {
+			animation.play("unchecked", true);
+			offset.set(0, 2);
+		}
+		
 		animation.finishCallback = animationFinished;
 		daValue = checked;
 	}
@@ -36,12 +44,15 @@ class CheckboxThingie extends FlxSprite
 	}
 
 	private function set_daValue(check:Bool):Bool {
+		var curAnim = animation.curAnim;
+		if (curAnim == null) return check;
+		
 		if(check) {
-			if(animation.curAnim.name != 'checked' && animation.curAnim.name != 'checking') {
+			if(curAnim.name != 'checked' && curAnim.name != 'checking') {
 				animation.play('checking', true);
 				offset.set(34, 25);
 			}
-		} else if(animation.curAnim.name != 'unchecked' && animation.curAnim.name != 'unchecking') {
+		} else if(curAnim.name != 'unchecked' && curAnim.name != 'unchecking') {
 			animation.play("unchecking", true);
 			offset.set(25, 28);
 		}
