@@ -25,24 +25,6 @@ package mobile.backend;
 import lime.system.System as LimeSystem;
 import haxe.io.Path;
 import haxe.Exception;
-import sys.FileSystem;
-import sys.io.File;
-import sys.io.Process;
-
-#if (sys && !ios)
-import Sys;
-#end
-
-#if android
-import mobile.android.AndroidPermissions;
-import mobile.android.AndroidEnvironment;
-import mobile.android.AndroidVersion;
-import mobile.android.AndroidVersionCode;
-import mobile.android.AndroidSettings;
-#end
-
-import mobile.utils.CoolUtil;
-import mobile.utils.Language;
 
 /**
  * A storage class for mobile.
