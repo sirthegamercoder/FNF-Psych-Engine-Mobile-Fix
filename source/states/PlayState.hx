@@ -211,6 +211,9 @@ class PlayState extends MusicBeatState
 	public var luaTpadCam:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
+	public var gfIconSide:String = '';
+	public var gfIconSwapOnSing:Bool = false;
+
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
