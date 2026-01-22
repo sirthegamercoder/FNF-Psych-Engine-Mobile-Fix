@@ -205,6 +205,7 @@ class PlayState extends MusicBeatState
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
+	public var iconGF:HealthIcon;
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
@@ -566,6 +567,12 @@ class PlayState extends MusicBeatState
 		iconP2.visible = !ClientPrefs.data.hideHud;
 		iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 		uiGroup.add(iconP2);
+
+		iconGF = new HealthIcon(gf != null ? gf.healthIcon : 'gf', true);
+		iconGF.y = healthBar.y - 75;
+		iconGF.visible = false;
+		iconGF.alpha = ClientPrefs.data.healthBarAlpha;
+		uiGroup.add(iconGF);
 
 		scoreTxt = new FlxText(0, healthBar.y + 40, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("phantom.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1912,20 +1919,50 @@ class PlayState extends MusicBeatState
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
 	{
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-		iconP1.scale.set(mult, mult);
-		iconP1.updateHitbox();
+		if (iconP1 != null) {
+			var mult:Float = FlxMath.lerp(1, iconP1.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+			iconP1.scale.set(mult, mult);
+			iconP1.updateHitbox();
+		}
 
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-		iconP2.scale.set(mult, mult);
-		iconP2.updateHitbox();
+		if (iconP2 != null) {
+			var mult:Float = FlxMath.lerp(1, iconP2.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+			iconP2.scale.set(mult, mult);
+			iconP2.updateHitbox();
+		}
+
+		if (iconGF != null && iconGF.visible) {
+			var mult:Float = FlxMath.lerp(1, iconGF.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+			iconGF.scale.set(mult, mult);
+			iconGF.updateHitbox();
+		}
 	}
 
 	public dynamic function updateIconsPosition()
 	{
 		var iconOffset:Int = 26;
-		iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-		iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+		var isGFSinging:Bool = (SONG.notes[curSection] != null && SONG.notes[curSection].gfSection);
+
+		if (iconP1 != null) iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+		if (iconP2 != null) iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+
+		if (iconGF != null && iconGF.visible) {
+			if (gfIconSwapOnSing && isGFSinging) {
+				if (gfIconSide == 'bf') {
+					iconGF.x = healthBar.barCenter + (150 * iconGF.scale.x - 150) / 2 - iconOffset;
+					iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset + 75;
+				} else if (gfIconSide == 'dad') {
+					iconGF.x = healthBar.barCenter - (150 * iconGF.scale.x) / 2 - iconOffset * 2;
+					iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 - 75;
+				}
+			} else {
+				if (gfIconSide == 'bf') {
+					iconGF.x = healthBar.barCenter + (150 * iconGF.scale.x - 150) / 2 - iconOffset + 75;
+				} else if (gfIconSide == 'dad') {
+					iconGF.x = healthBar.barCenter - (150 * iconGF.scale.x) / 2 - iconOffset * 2 - 75;
+				}
+			}
+		}
 	}
 
 	var iconsAnimations:Bool = true;
@@ -1954,8 +1991,13 @@ class PlayState extends MusicBeatState
 		var healthPercent:Float = healthBar.percent / 100;
 
 		if(iconP1 != null) {
-			iconP1.animation.curAnim.curFrame = (healthBar.percent < 20) ? 1 : 0; //If health is under 20%, change player icon to frame 1 (losing icon), otherwise, frame 0 (normal)
-			if (iconP2 != null) iconP2.animation.curAnim.curFrame = (healthBar.percent > 80) ? 1 : 0; //If health is over 80%, change opponent icon to frame 1 (losing icon), otherwise, frame 0 (normal)
+				iconP1.animation.curAnim.curFrame = (healthBar.percent < 20) ? 1 : 0;
+				if (iconP2 != null) iconP2.animation.curAnim.curFrame = (healthBar.percent > 80) ? 1 : 0;
+			}
+		}
+
+		if(iconGF != null && iconGF.visible && iconGF.animation != null && iconGF.animation.curAnim != null) {
+			iconGF.animation.curAnim.curFrame = 0;
 		}
 	}
 
