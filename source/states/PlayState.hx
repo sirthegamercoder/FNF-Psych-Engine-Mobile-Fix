@@ -1991,13 +1991,14 @@ class PlayState extends MusicBeatState
 		var healthPercent:Float = healthBar.percent / 100;
 
 		if(iconP1 != null) {
-				iconP1.animation.curAnim.curFrame = (healthBar.percent < 20) ? 1 : 0;
-				if (iconP2 != null) iconP2.animation.curAnim.curFrame = (healthBar.percent > 80) ? 1 : 0;
+				iconP1.animation.curAnim.curFrame = (healthBar.percent < 20) ? 1 : 0; //If health is under 20%, change player icon to frame 1 (losing icon), otherwise, frame 0 (normal)
+				if (iconP2 != null) iconP2.animation.curAnim.curFrame = (healthBar.percent > 80) ? 1 : 0; //If health is over 80%, change opponent icon to frame 1 (losing icon), otherwise, frame 0 (normal)
 			}
 		}
 
+		// GF icon always shows normal state
 		if(iconGF != null && iconGF.visible && iconGF.animation != null && iconGF.animation.curAnim != null) {
-			iconGF.animation.curAnim.curFrame = 0;
+			iconGF.animation.curAnim.curFrame = 0; // Always normal
 		}
 	}
 
