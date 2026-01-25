@@ -180,10 +180,6 @@ class HScript extends Iris
 		#if flxanimate
 		set('FlxAnimate', FlxAnimate);
 		#end
-		#if (hxvlc)
-		set('VideoSprite', objects.VideoSprite);
-		set('VideoHandler', objects.VideoHandler);
-		#end
 
 		// Functions & Variables
 		set('setVar', function(name:String, value:Dynamic) {
