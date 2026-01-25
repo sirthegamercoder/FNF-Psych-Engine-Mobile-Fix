@@ -1,170 +1,111 @@
 package objects;
 
-import flixel.addons.display.FlxPieDial;
-
 #if hxvlc
-import hxvlc.flixel.FlxVideoSprite;
-#end
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
+import flixel.util.FlxColor;
+import objects.VideoHandler;
 
-class VideoSprite extends FlxSpriteGroup {
-	#if VIDEOS_ALLOWED
+/**
+ * Compatibility wrapper for hxCodec 2.x VideoSprite using hxvlc 2.2.5
+ * This class allows you to play videos using sprites (FlxSprite).
+ */
+class VideoSprite extends FlxSprite
+{
+	public var bitmap:VideoHandler;
+	public var canvasWidth:Null<Int>;
+	public var canvasHeight:Null<Int>;
+
+	public var openingCallback:Void->Void = null;
+	public var graphicLoadedCallback:Void->Void = null;
 	public var finishCallback:Void->Void = null;
-	public var onSkip:Void->Void = null;
 
-	final _timeToSkip:Float = 1;
-	public var holdingTime:Float = 0;
-	public var videoSprite:FlxVideoSprite;
-	public var skipSprite:FlxPieDial;
-	public var cover:FlxSprite;
-	public var canSkip(default, set):Bool = false;
+	private var oneTime:Bool = false;
 
-	private var videoName:String;
-
-	public var waiting:Bool = false;
-
-	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Dynamic = false) {
-		super();
-
-		this.videoName = videoName;
-		scrollFactor.set();
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-
-		waiting = isWaiting;
-		if(!waiting)
-		{
-			cover = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-			cover.scale.set(FlxG.width + 100, FlxG.height + 100);
-			cover.screenCenter();
-			cover.scrollFactor.set();
-			add(cover);
-		}
-
-		// initialize sprites
-		videoSprite = new FlxVideoSprite();
-		videoSprite.antialiasing = ClientPrefs.data.antialiasing;
-		add(videoSprite);
-		if(canSkip) this.canSkip = true;
-
-		// callbacks
-		if(!shouldLoop) videoSprite.bitmap.onEndReached.add(finishVideo);
-
-		videoSprite.bitmap.onFormatSetup.add(function()
-		{
-			/*
-			#if hxvlc
-			var wd:Int = videoSprite.bitmap.formatWidth;
-			var hg:Int = videoSprite.bitmap.formatHeight;
-			trace('Video Resolution: ${wd}x${hg}');
-			videoSprite.scale.set(FlxG.width / wd, FlxG.height / hg);
-			#end
-			*/
-			videoSprite.setGraphicSize(FlxG.width);
-			videoSprite.updateHitbox();
-			videoSprite.screenCenter();
-		});
-
-		// start video and adjust resolution to screen size
-		videoSprite.load(videoName, shouldLoop ? ['input-repeat=65545'] : null);
-	}
-
-	var alreadyDestroyed:Bool = false;
-	override function destroy()
+	public function new(X:Float = 0, Y:Float = 0)
 	{
-		if(alreadyDestroyed)
-			return;
+		super(X, Y);
 
-		trace('Video destroyed');
-		if(cover != null)
+		makeGraphic(1, 1, FlxColor.TRANSPARENT);
+
+		bitmap = new VideoHandler();
+		bitmap.canUseAutoResize = false;
+		bitmap.visible = false;
+		bitmap.openingCallback = function()
 		{
-			remove(cover);
-			cover.destroy();
+			if (openingCallback != null)
+				openingCallback();
 		}
-		
-		finishCallback = null;
-		onSkip = null;
-
-		if(FlxG.state != null)
+		bitmap.finishCallback = function()
 		{
-			if(FlxG.state.members.contains(this))
-				FlxG.state.remove(this);
+			oneTime = false;
 
-			if(FlxG.state.subState != null && FlxG.state.subState.members.contains(this))
-				FlxG.state.subState.remove(this);
-		}
-		super.destroy();
-		alreadyDestroyed = true;
-	}
-	function finishVideo()
-	{
-		if (!alreadyDestroyed)
-		{
-			if(finishCallback != null)
+			if (finishCallback != null)
 				finishCallback();
-			
-			destroy();
+
+			kill();
 		}
 	}
 
 	override function update(elapsed:Float)
 	{
-		if(canSkip)
-		{
-			if(Controls.instance.pressed('accept'))
-			{
-				holdingTime = Math.max(0, Math.min(_timeToSkip, holdingTime + elapsed));
-			}
-			else if (holdingTime > 0)
-			{
-				holdingTime = Math.max(0, FlxMath.lerp(holdingTime, -0.1, FlxMath.bound(elapsed * 3, 0, 1)));
-			}
-			updateSkipAlpha();
+		super.update(elapsed);
 
-			if(holdingTime >= _timeToSkip)
+		if (bitmap.isPlaying && bitmap.isDisplaying && bitmap.bitmapData != null && !oneTime)
+		{
+			var graphic:FlxGraphic = FlxG.bitmap.add(bitmap.bitmapData, false, bitmap.mrl);
+			if (graphic.imageFrame.frame == null)
 			{
-				if(onSkip != null) onSkip();
-				finishCallback = null;
-				videoSprite.bitmap.onEndReached.dispatch();
-				trace('Skipped video');
 				return;
 			}
-		}
-		super.update(elapsed);
-	}
 
-	function set_canSkip(newValue:Bool)
-	{
-		canSkip = newValue;
-		if(canSkip)
-		{
-			if(skipSprite == null)
+			loadGraphic(graphic);
+
+			if (canvasWidth != null && canvasHeight != null)
 			{
-				skipSprite = new FlxPieDial(0, 0, 40, FlxColor.WHITE, 40, true, 24);
-				skipSprite.replaceColor(FlxColor.BLACK, FlxColor.TRANSPARENT);
-				skipSprite.x = FlxG.width - (skipSprite.width + 80);
-				skipSprite.y = FlxG.height - (skipSprite.height + 72);
-				skipSprite.amount = 0;
-				add(skipSprite);
+				setGraphicSize(canvasWidth, canvasHeight);
+				updateHitbox();
 			}
+
+			if (graphicLoadedCallback != null)
+				graphicLoadedCallback();
+
+			oneTime = true;
 		}
-		else if(skipSprite != null)
-		{
-			remove(skipSprite);
-			skipSprite.destroy();
-			skipSprite = null;
-		}
-		return canSkip;
 	}
 
-	function updateSkipAlpha()
+	/**
+	 * Native video support for Flixel & OpenFL
+	 * @param Path Example: `your/video/here.mp4`
+	 * @param Loop Loop the video.
+	 * @param PauseMusic Pause music until the video ends.
+	 */
+	public function playVideo(Path:String, Loop:Bool = false, PauseMusic:Bool = false):Void
 	{
-		if(skipSprite == null) return;
+		bitmap.playVideo(Path, Loop, PauseMusic);
+	}
+}
+#else
 
-		skipSprite.amount = Math.min(1, Math.max(0, (holdingTime / _timeToSkip) * 1.025));
-		skipSprite.alpha = FlxMath.remapToRange(skipSprite.amount, 0.025, 1, 0, 1);
+class VideoSprite extends flixel.FlxSprite
+{
+	public var bitmap:Dynamic;
+	public var canvasWidth:Null<Int>;
+	public var canvasHeight:Null<Int>;
+	public var openingCallback:Void->Void = null;
+	public var graphicLoadedCallback:Void->Void = null;
+	public var finishCallback:Void->Void = null;
+
+	public function new(X:Float = 0, Y:Float = 0)
+	{
+		super(X, Y);
+		trace("VideoSprite: hxvlc not available");
 	}
 
-	public function play() videoSprite?.play();
-	public function resume() videoSprite?.resume();
-	public function pause() videoSprite?.pause();
-	#end
+	public function playVideo(Path:String, Loop:Bool = false, PauseMusic:Bool = false):Void
+	{
+		trace("VideoSprite.playVideo: hxvlc not available");
+	}
 }
+#end
