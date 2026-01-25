@@ -872,7 +872,7 @@ class PlayState extends MusicBeatState
 	{
 		#if VIDEOS_ALLOWED
 		inCutscene = !forMidSong;
-		canPause = forMidSong;
+		canPause = true;
 
 		var foundFile:Bool = false;
 		var fileName:String = Paths.video(name);
@@ -1612,6 +1612,9 @@ class PlayState extends MusicBeatState
 
 	override function openSubState(SubState:FlxSubState)
 	{
+		#if VIDEOS_ALLOWED
+		if (videoCutscene != null) videoCutscene.pause();
+		#end
 		stagesFunc(function(stage:BaseStage) stage.openSubState(SubState));
 		if (paused)
 		{
@@ -1632,7 +1635,10 @@ class PlayState extends MusicBeatState
 	override function closeSubState()
 	{
 		super.closeSubState();
-		
+
+		#if VIDEOS_ALLOWED
+		if (videoCutscene != null) videoCutscene.resume();
+		#end
 		stagesFunc(function(stage:BaseStage) stage.closeSubState());
 		if (paused)
 		{
@@ -1735,6 +1741,13 @@ class PlayState extends MusicBeatState
 		callOnScripts('onUpdate', [elapsed]);
 
 		super.update(elapsed);
+
+		#if VIDEOS_ALLOWED
+		if(videoCutscene != null && videoCutscene.videoSprite != null)
+		{
+			videoCutscene.videoSprite.bitmap.rate = paused ? 0 : playbackRate;
+		}
+		#end
 
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
